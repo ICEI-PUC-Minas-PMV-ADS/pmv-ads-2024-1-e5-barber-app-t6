@@ -129,9 +129,9 @@ app.get('/apipedido', async (req, res) => {
           let pool = await sql.createPool(config);
           let pedidos = await pool.query(
                `SELECT pe.PedidoId, pr.ProdutoNome, cl.ClienteNome, pe.Quantidade
-               from UniversalBox.Pedidos pe
-               join UniversalBox.Produtos pr on pr.ProdutoId = pe.ProdutoId
-               join UniversalBox.Clientes cl on cl.ClienteId = pe.ClienteId`);
+               FROM UniversalBox.Pedidos pe
+               JOIN UniversalBox.Produtos pr ON pr.ProdutoId = pe.ProdutoId
+               JOIN UniversalBox.Clientes cl ON cl.ClienteId = pe.ClienteId`);
           res.send(pedidos[0]);
      }
      catch (error) {
@@ -181,4 +181,19 @@ app.delete('/deletarpedido', async (req, res) => {
 })
 //#endregion
 
+//#region Usuarios
+
+app.get('/apilogin', async (req, res) => {
+     try {
+          let pool = await sql.createPool(config);
+          let usuarios = await pool.query(
+               `SELECT * FROM UniversalBox.Usuarios`);
+          res.send(pedidos[0]);
+     }
+     catch (error) {
+          console.log(error);
+     }
+});
+
+//#endregion
 app.listen(API_PORT, () => console.log(`ouvindo ${API_PORT}`));

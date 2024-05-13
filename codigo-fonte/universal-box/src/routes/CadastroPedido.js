@@ -3,7 +3,6 @@ import Navbar from './Navbar';
 import Select from 'react-select'
 
 function CadastroPedidos() {
-  const [returnedData, setReturnedData] = useState('teste use state');
   const [produtos, setProdutos] = useState([]);
   const [clientes, setClientes] = useState([]);
   const [produtoSelecionado, setProdutoSelecionado] = useState({ ProdutoId: '' });
@@ -98,7 +97,7 @@ function CadastroPedidos() {
     })
       .then(res => res.json());
     console.log(newData);
-    setReturnedData(newData[0])
+    window.location.href = '/pedidos';
   }
 
 

@@ -3,7 +3,6 @@ import Navbar from './Navbar';
 import { Navigate } from 'react-router-dom';
 
 function CadastroCliente() {
-    const [returnedData, setReturnedData] = useState('teste use state');
     const [clientes, setClientes] = useState({ ClienteNome: '', ClienteCpf: '', ClienteTelefone: '', ClienteCep: '' });
 
     const setInput = (e) => {
@@ -25,8 +24,7 @@ function CadastroCliente() {
             body: JSON.stringify(clientes)
         })
             .then(res => res.json())
-            .then(<Navigate push to="/clientes" />);
-        setReturnedData(newData[0])
+        window.location.href = '/clientes';
     }
 
     return (

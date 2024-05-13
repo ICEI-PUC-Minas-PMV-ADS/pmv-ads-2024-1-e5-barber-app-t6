@@ -53,7 +53,7 @@ function Pedidos() {
       <Navbar />
       <div className="container mt-5">
         <h2>Lista de Pedidos</h2>
-        <Link to="/cadastroPedido" className="btn btn-primary mb-3">Cadastrar Novo Pedido</Link>
+        <Link to="/cadastropedido" className="btn btn-primary mb-3">Cadastrar Novo Pedido</Link>
         <table className="table table-hover">
           <thead>
             <tr>

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Navbar from './Navbar';
 
 function CadastroProduto() {
-  const [returnedData, setReturnedData] = useState('teste use state');
   const [produtos, setProdutos] = useState({ ProdutoNome: '', FornecedorNome: '', ProdutoModelo: '', ProdutoPreco: '', ProdutoQuantidade: '' });
 
   const setInput = (e) => {
@@ -24,8 +23,7 @@ function CadastroProduto() {
       body: JSON.stringify(produtos)
     })
       .then(res => res.json());
-    console.log(newData);
-    setReturnedData(newData[0])
+    window.location.href = '/produtos';
   }
 
   return (

@@ -12,7 +12,7 @@ import Login from './routes/Login';
 import Fornecedores from './routes/Fornecedores';
 import CadastroFornecedor from './routes/CadastroFornecedor';
 import Pedidos from './routes/Pedidos';
-import CadastroPedidos from './routes/CadastroPedidos';
+import CadastroPedido from './routes/CadastroPedido';
 import './index.css';
 
 const router = createBrowserRouter([
@@ -57,8 +57,8 @@ const router = createBrowserRouter([
     element: <Pedidos />
   },
   {
-    path: "cadastrarpedidos",
-    element: <CadastroPedidos />
+    path: "cadastropedido",
+    element: <CadastroPedido />
   },
 ])
 
