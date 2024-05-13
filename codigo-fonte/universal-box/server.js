@@ -123,7 +123,6 @@ app.delete('/deletarCliente', async (req, res) => {
 //#endregion
 
 //#region Pedidos
-
 app.get('/apipedido', async (req, res) => {
      try {
           let pool = await sql.createPool(config);
@@ -168,11 +167,57 @@ app.post('/criarpedido', async (req, res) => {
 
 app.delete('/deletarpedido', async (req, res) => {
      try {
-          console.log(req.body.ClienteId)
           let pool = await sql.createPool(config);
           let deletarPedido = await pool.query(
                `DELETE FROM UniversalBox.Pedidos
                WHERE PedidoId = ${req.body.PedidoId}
+          `)
+     }
+     catch (error) {
+          console.log(error);
+     }
+})
+//#endregion
+
+//# Fornecedores
+app.get('/apifornecedor', async (req, res) => {
+     try {
+          let pool = await sql.createPool(config);
+          let fornecedores = await pool.query(
+               `SELECT * from UniversalBox.Fornecedores`);
+          res.send(fornecedores[0]);
+     }
+     catch (error) {
+          console.log(error);
+     }
+});
+
+
+app.post('/criarfornecedor', async (req, res) => {
+     try {
+          let pool = await sql.createPool(config);
+          let criarFornecedores = await pool.query(
+               `INSERT INTO UniversalBox.Fornecedores (Empresa, Responsavel, Telefone, Cnpj) VALUES
+               ('${req.body.FornecedorEmpresa}',
+               '${req.body.FornecedorResponsavel}',
+               '${req.body.FornecedorTelefone}',
+               '${req.body.FornecedorCnpj}')`
+          )
+          let fornecedores = await pool.query(`SELECT * from UniversalBox.Pedidos`);
+          res.send(fornecedores[0]);
+     }
+     catch (error) {
+          console.log(error);
+     }
+});
+
+app.delete('/deletarfornecedor', async (req, res) => {
+     try {
+          console.log(req.body.ClienteId)
+          let pool = await sql.createPool(config);
+          let deletarPedido = await pool.query(
+               `DELETE FROM UniversalBox.Fornecedores
+               WHERE FornecedorId = ${req.body.FornecedorId}
           `)
      }
      catch (error) {

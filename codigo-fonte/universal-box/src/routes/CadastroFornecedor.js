@@ -2,20 +2,19 @@ import React, { useState } from 'react';
 import Navbar from './Navbar';
 
 function CadastroFornecedor() {
-  const [returnedData, setReturnedData] = useState('teste use state');
-  const [fornecedores, setFornecedores] = useState({ FornecedorId: '', FornecedorEmpresa: '', FornecedorResponsavel: '', FornecedorTelefone: '', FornecedorCEP: '' });
+  const [fornecedores, setFornecedores] = useState({ FornecedorEmpresa: '', FornecedorResponsavel: '', FornecedorTelefone: '', FornecedorCnpj: '' });
 
   const setInput = (e) => {
     const { name, value } = e.target;
     console.log(value);
     setFornecedores(prevState => ({
       ...prevState,
-      [name]: name === 'FornecedorId' || name === 'FornecedorCNPJ' ? parseInt(value) : value
+      [name]: name === 'FornecedorId' ? parseInt(value) : value
     }));
   }
 
   const createFornecedor = async () => {
-    const newData = await fetch('/criar', {
+    const newData = await fetch('/criarfornecedor', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -25,7 +24,7 @@ function CadastroFornecedor() {
     })
       .then(res => res.json());
     console.log(newData);
-    setReturnedData(newData[0])
+    window.location.href = '/fornecedores';
   }
 
   return (
@@ -38,14 +37,6 @@ function CadastroFornecedor() {
               <div className="card-body">
                 <h1 className="card-title">Cadastrar Fornecedor</h1>
                 <div className="form-group">
-                  <input
-                    type='number'
-                    className="form-control mb-3"
-                    placeholder="ID"
-                    name="FornecedorId"
-                    value={fornecedores.FornecedorId}
-                    onChange={setInput} />
-
                   <input
                     className="form-control mb-3"
                     placeholder="Empresa"
@@ -68,11 +59,10 @@ function CadastroFornecedor() {
                     onChange={setInput} />
 
                   <input
-                    type='number'
                     className="form-control mb-3"
                     placeholder="CNPJ"
-                    name="FornecedorCNPJ"
-                    value={fornecedores.FornecedorCNPJ}
+                    name="FornecedorCnpj"
+                    value={fornecedores.FornecedorCnpj}
                     onChange={setInput} />
                 </div>
                 <button
