@@ -83,7 +83,8 @@ Enumere as restrições à sua solução. Lembre-se de que as restrições geral
 
 
 
-![Diagrama de Casos de Uso](/documentos/img/casos-de-uso.png)
+![diagrama](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2024-1-e5-universalbox-app-t6/assets/140434422/32f2f9ef-4b4c-4c43-b5e1-f93a01ec9986)
+
 
 
 
