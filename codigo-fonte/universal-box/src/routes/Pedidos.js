@@ -1,93 +1,83 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 import Navbar from './Navbar';
 
-function CadastroProduto() {
-  const [returnedData, setReturnedData] = useState('teste use state');
-  const [produtos, setProdutos] = useState({ ProdutoNome: '', FornecedorNome: '', ProdutoModelo: '', ProdutoPreco: '', ProdutoQuantidade: '' });
+function Pedidos() {
+  const [pedidos, setPedidos] = useState([]);
+  const [deletarPedido, setDeletarPedido] = useState({ PedidoId: '' })
 
-  const setInput = (e) => {
-    const { name, value } = e.target;
-    setProdutos(prevState => ({
-      ...prevState,
-      [name]: name === 'ProdutoQuantidade' ? parseInt(value) : value,
-      [name]: name === 'ProdutoPreco' ? parseFloat(value) : value
-    }));
-  }
+  useEffect(() => {
+    const fetchPedidos = async () => {
+      try {
+        const response = await fetch('/apiPedido');
+        if (!response.ok) {
+          throw new Error('Erro ao obter os dados');
+        }
+        const data = await response.json();
+        setPedidos(data);
+      } catch (error) {
+        console.error('Erro:', error);
+      }
+    };
 
-  const createProduto = async () => {
-    const newData = await fetch('/criar', {
-      method: 'POST',
+    fetchPedidos();
+  }, []);
+
+  const DeletePedido = async () => {
+    const newData = await fetch('/deletarPedido', {
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      body: JSON.stringify(produtos)
+      body: JSON.stringify(deletarPedido)
     })
       .then(res => res.json());
-    console.log(newData);
-    setReturnedData(newData[0])
   }
+
+
+  const DeletePedidoState = async (pedidoId) => {
+    console.log(pedidoId)
+    setDeletarPedido({ PedidoId: parseInt(pedidoId) })
+  }
+
+  useEffect(() => {
+    if (deletarPedido.PedidoId !== '') {
+      DeletePedido();
+    }
+  }, [deletarPedido])
 
   return (
     <div>
       <Navbar />
       <div className="container mt-5">
-        <div className="row justify-content-center">
-          <div className="col-md-6">
-            <div className="card">
-              <div className="card-body">
-                <h1 className="card-title">Novo Pedido</h1>
-                <div className="form-group">
-                  <input
-                    className="form-control mb-3"
-                    placeholder="Nome"
-                    name="ProdutoNome"
-                    value={produtos.ProdutoNome}
-                    onChange={setInput} />
-
-                  <input
-                    className="form-control mb-3"
-                    placeholder="Fornecedor"
-                    name="FornecedorNome"
-                    value={produtos.FornecedorNome}
-                    onChange={setInput} />
-
-                  <input
-                    className="form-control mb-3"
-                    placeholder="Modelo"
-                    name="ProdutoModelo"
-                    value={produtos.ProdutoModelo}
-                    onChange={setInput} />
-
-                  <input
-                    type='number'
-                    className="form-control mb-3"
-                    placeholder="Preço"
-                    name="ProdutoPreco"
-                    value={produtos.ProdutoPreco}
-                    onChange={setInput} />
-
-                  <input
-                    type='number'
-                    className="form-control mb-3"
-                    placeholder="Quantidade"
-                    name="ProdutoQuantidade"
-                    value={produtos.ProdutoQuantidade}
-                    onChange={setInput} />
-                </div>
-                <button
-                  type="button"
-                  className="btn btn-primary btn-block"
-                  onClick={createProduto}>
-                  Cadastrar Novo Produto
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <h2>Lista de Pedidos</h2>
+        <Link to="/cadastroPedido" className="btn btn-primary mb-3">Cadastrar Novo Pedido</Link>
+        <table className="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Produto</th>
+              <th scope="col">Cliente</th>
+              <th scope="col">Quantidade</th>
+            </tr>
+          </thead>
+          <tbody>
+            {pedidos.map((pedido) => (
+              <tr key={pedido.PedidoId}>
+                <td>{pedido.PedidoId}</td>
+                <td>{pedido.ProdutoNome}</td>
+                <td>{pedido.ClienteNome}</td>
+                <td>{pedido.Quantidade}</td>
+                <td><Button value={"Deletar"} onClick={(pedidoId) => DeletePedidoState(pedido.PedidoId)} /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
 }
 
-export default CadastroProduto;
+export default Pedidos;

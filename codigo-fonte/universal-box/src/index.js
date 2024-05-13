@@ -11,6 +11,8 @@ import CadastroCliente from './routes/CadastroCliente';
 import Login from './routes/Login';
 import Fornecedores from './routes/Fornecedores';
 import CadastroFornecedor from './routes/CadastroFornecedor';
+import Pedidos from './routes/Pedidos';
+import CadastroPedidos from './routes/CadastroPedidos';
 import './index.css';
 
 const router = createBrowserRouter([
@@ -48,7 +50,15 @@ const router = createBrowserRouter([
   },
   {
     path: "cadastrofornecedor",
-    element: <CadastroFornecedor/>
+    element: <CadastroFornecedor />
+  },
+  {
+    path: "pedidos",
+    element: <Pedidos />
+  },
+  {
+    path: "cadastrarpedidos",
+    element: <CadastroPedidos />
   },
 ])
 

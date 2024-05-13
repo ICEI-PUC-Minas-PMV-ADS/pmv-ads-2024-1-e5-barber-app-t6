@@ -25,8 +25,7 @@ function Produtos() {
     fetchData();
   }, []);
 
-  const DeleteProduto = async (produtoId) => {
-    setDeletarProduto({ ProdutoId: parseInt(produtoId) })
+  const DeleteProduto = async () => {
     const newData = await fetch('/deletar', {
       method: 'DELETE',
       headers: {
@@ -37,6 +36,18 @@ function Produtos() {
     })
       .then(res => res.json());
   }
+
+
+  const DeleteProdutoState = async (produtoId) => {
+    console.log(produtoId)
+    setDeletarProduto({ ProdutoId: parseInt(produtoId) })
+  }
+
+  useEffect(() => {
+    if (deletarProduto.ProdutoId !== '') {
+      DeleteProduto();
+    }
+  }, [deletarProduto])
 
   return (
     <div>
@@ -64,7 +75,7 @@ function Produtos() {
                 <td>{produto.ProdutoModelo}</td>
                 <td>{produto.ProdutoPreco}</td>
                 <td>{produto.Quantidade}</td>
-                <td><Button value={"Deletar"} onClick={(produtoId) => DeleteProduto(produto.ProdutoId)} /></td>
+                <td><Button value={"Deletar"} onClick={(produtoId) => DeleteProdutoState(produto.ProdutoId)} /></td>
               </tr>
             ))}
           </tbody>

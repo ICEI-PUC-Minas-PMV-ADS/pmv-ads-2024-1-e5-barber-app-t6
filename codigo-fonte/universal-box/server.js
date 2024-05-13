@@ -22,6 +22,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
+//#region Produtos
 app.get('/api', async (req, res) => {
      try {
           let pool = await sql.createPool(config);
@@ -69,6 +70,9 @@ app.delete('/deletar', async (req, res) => {
           console.log(error);
      }
 })
+//#endregion
+
+//#region Clientes
 
 app.get('/apicliente', async (req, res) => {
      try {
@@ -101,5 +105,80 @@ app.post('/criarcliente', async (req, res) => {
           console.log(error);
      }
 });
+
+app.delete('/deletarCliente', async (req, res) => {
+     try {
+          console.log(req.body.ClienteId)
+          let pool = await sql.createPool(config);
+          let deletarCliente = await pool.query(
+               `DELETE FROM UniversalBox.Clientes
+               WHERE ClienteId = ${req.body.ClienteId}
+          `)
+     }
+     catch (error) {
+          console.log(error);
+     }
+})
+
+//#endregion
+
+//#region Pedidos
+
+app.get('/apipedido', async (req, res) => {
+     try {
+          let pool = await sql.createPool(config);
+          let pedidos = await pool.query(
+               `SELECT pe.PedidoId, pr.ProdutoNome, cl.ClienteNome, pe.Quantidade
+               from UniversalBox.Pedidos pe
+               join UniversalBox.Produtos pr on pr.ProdutoId = pe.ProdutoId
+               join UniversalBox.Clientes cl on cl.ClienteId = pe.ClienteId`);
+          res.send(pedidos[0]);
+     }
+     catch (error) {
+          console.log(error);
+     }
+});
+
+
+app.post('/criarpedido', async (req, res) => {
+     try {
+          let pool = await sql.createPool(config);
+          let criarPedidos = await pool.query(
+               `INSERT INTO UniversalBox.Pedidos
+                    (ProdutoId, ClienteId, Quantidade)
+                    VALUES
+                   ('${req.body.ProdutoId}',
+                  '${req.body.ClienteId}',
+                   '${req.body.Quantidade}')`
+          )
+          let ajusteQuantidade = await pool.query(
+               `UPDATE UniversalBox.Produtos p
+               join UniversalBox.Pedidos pe on pe.ProdutoId = p.ProdutoId
+               SET p.Quantidade = p.Quantidade - pe.Quantidade
+               WHERE p.ProdutoId = ${req.body.ProdutoId}`
+          )
+
+          let pedidos = await pool.query(`SELECT * from UniversalBox.Pedidos`);
+          res.send(pedidos[0]);
+     }
+     catch (error) {
+          console.log(error);
+     }
+});
+
+app.delete('/deletarpedido', async (req, res) => {
+     try {
+          console.log(req.body.ClienteId)
+          let pool = await sql.createPool(config);
+          let deletarPedido = await pool.query(
+               `DELETE FROM UniversalBox.Pedidos
+               WHERE PedidoId = ${req.body.PedidoId}
+          `)
+     }
+     catch (error) {
+          console.log(error);
+     }
+})
+//#endregion
 
 app.listen(API_PORT, () => console.log(`ouvindo ${API_PORT}`));

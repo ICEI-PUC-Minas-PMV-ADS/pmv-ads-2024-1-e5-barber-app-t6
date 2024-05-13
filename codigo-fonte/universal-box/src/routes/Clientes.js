@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 import Navbar from './Navbar';
 
 function Clientes() {
   const [clientes, setClientes] = useState([]);
+  const [deletarCliente, setDeletarCliente] = useState({ ClienteId: '' })
 
   useEffect(() => {
     const fetchClientes = async () => {
@@ -21,6 +23,30 @@ function Clientes() {
 
     fetchClientes();
   }, []);
+
+  const DeleteCliente = async () => {
+    const newData = await fetch('/deletarCliente', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(deletarCliente)
+    })
+      .then(res => res.json());
+  }
+
+
+  const DeleteClienteState = async (clienteId) => {
+    console.log(clienteId)
+    setDeletarCliente({ ClienteId: parseInt(clienteId) })
+  }
+
+  useEffect(() => {
+    if (deletarCliente.ClienteId !== '') {
+      DeleteCliente();
+    }
+  }, [deletarCliente])
 
   return (
     <div>
@@ -46,6 +72,7 @@ function Clientes() {
                 <td>{cliente.ClienteCpf}</td>
                 <td>{cliente.ClienteTelefone}</td>
                 <td>{cliente.ClienteCep}</td>
+                <td><Button value={"Deletar"} onClick={(clienteId) => DeleteClienteState(cliente.ClienteId)} /></td>
               </tr>
             ))}
           </tbody>

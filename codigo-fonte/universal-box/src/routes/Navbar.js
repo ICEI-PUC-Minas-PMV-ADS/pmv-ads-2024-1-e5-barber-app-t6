@@ -36,14 +36,13 @@ function Navbar() {
             <li class="nav-item">
               <Link to="/fornecedores" class="nav-link">Fornecedores</Link>
             </li>
+            <li class="nav-item">
+              <Link to="/pedidos" class="nav-link">Pedidos</Link>
+            </li>
             <li className="nav-item">
               <Link to="/login" className="nav-link">Login</Link>
             </li>
           </ul>
-          <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search" />
-            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-          </form>
         </div>
       </div>
     </nav>
