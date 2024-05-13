@@ -82,8 +82,7 @@ Enumere as restrições à sua solução. Lembre-se de que as restrições geral
 ## Diagrama de Casos de Uso
 
 
-
-![Diagrama de Casos de Uso](/documentos/img/casos-de-uso.png)
+![diagrama](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2024-1-e5-universalbox-app-t6/assets/140434422/fd3f75d1-cfb7-4c7f-8ed5-51fedf1129b6)
 
 
 
