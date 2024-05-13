@@ -183,6 +183,8 @@ app.delete('/deletarpedido', async (req, res) => {
 
 //#region Usuarios
 
+// UsuarioId, Email, Username, Senha (ID é auto increment, não precisa passar o valor pra criar)
+
 app.get('/apilogin', async (req, res) => {
      try {
           let pool = await sql.createPool(config);
