@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from '../../Navbar';
+import { useOrdenacao } from '../../context/useOrdenacao';
 
 interface Pedido {
   PedidoId: number;
@@ -13,9 +17,10 @@ interface Pedido {
 function Pedidos() {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [deletarPedido, setDeletarPedido] = useState<{ PedidoId: number | null }>({ PedidoId: null });
+  const { itens: pedidosOrdenados, solicitarOrdenacao, obterClassNamesPara } = useOrdenacao(pedidos);
 
   useEffect(() => {
-    const fetchPedidos = async () => {
+    const buscarPedidos = async () => {
       try {
         const response = await fetch('/apiPedido');
         if (!response.ok) {
@@ -28,10 +33,10 @@ function Pedidos() {
       }
     };
 
-    fetchPedidos();
+    buscarPedidos();
   }, []);
 
-  const DeletePedido = async () => {
+  const deletarPedidoAPI = async () => {
     await fetch('/deletarPedido', {
       method: 'DELETE',
       headers: {
@@ -42,16 +47,26 @@ function Pedidos() {
     }).then(res => res.json());
   };
 
-  const DeletePedidoState = async (pedidoId: number) => {
+  const deletarPedidoEstado = async (pedidoId: number) => {
     console.log(pedidoId);
     setDeletarPedido({ PedidoId: pedidoId });
   };
 
   useEffect(() => {
     if (deletarPedido.PedidoId !== null) {
-      DeletePedido();
+      deletarPedidoAPI();
     }
   }, [deletarPedido]);
+
+  const renderIconeOrdenacao = (chave: keyof Pedido) => {
+    if (!obterClassNamesPara(chave)) {
+      return <FontAwesomeIcon icon={faSortUp} className="sort-icon" />;
+    }
+    if (obterClassNamesPara(chave) === 'ascendente') {
+      return <FontAwesomeIcon icon={faSortUp} className="sort-icon" />;
+    }
+    return <FontAwesomeIcon icon={faSortDown} className="sort-icon" />;
+  };
 
   return (
     <div>
@@ -62,21 +77,29 @@ function Pedidos() {
         <table className="table table-hover">
           <thead>
             <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Produto</th>
-              <th scope="col">Cliente</th>
-              <th scope="col">Quantidade</th>
+              <th scope="col" onClick={() => solicitarOrdenacao('PedidoId')} className={obterClassNamesPara('PedidoId')}>
+                ID {renderIconeOrdenacao('PedidoId')}
+              </th>
+              <th scope="col" onClick={() => solicitarOrdenacao('ProdutoNome')} className={obterClassNamesPara('ProdutoNome')}>
+                Produto {renderIconeOrdenacao('ProdutoNome')}
+              </th>
+              <th scope="col" onClick={() => solicitarOrdenacao('ClienteNome')} className={obterClassNamesPara('ClienteNome')}>
+                Cliente {renderIconeOrdenacao('ClienteNome')}
+              </th>
+              <th scope="col" onClick={() => solicitarOrdenacao('Quantidade')} className={obterClassNamesPara('Quantidade')}>
+                Quantidade {renderIconeOrdenacao('Quantidade')}
+              </th>
               <th scope="col">Ações</th>
             </tr>
           </thead>
           <tbody>
-            {pedidos.map((pedido) => (
+            {pedidosOrdenados.map((pedido) => (
               <tr key={pedido.PedidoId}>
                 <td>{pedido.PedidoId}</td>
                 <td>{pedido.ProdutoNome}</td>
                 <td>{pedido.ClienteNome}</td>
                 <td>{pedido.Quantidade}</td>
-                <td><Button onClick={() => DeletePedidoState(pedido.PedidoId)}>Deletar</Button></td>
+                <td><Button onClick={() => deletarPedidoEstado(pedido.PedidoId)}>Deletar</Button></td>
               </tr>
             ))}
           </tbody>

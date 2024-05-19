@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from '../../Navbar';
+import { useOrdenacao } from '../../context/useOrdenacao';
 
 interface Fornecedor {
   FornecedorId: string;
@@ -15,9 +18,10 @@ interface Fornecedor {
 function Fornecedores() {
   const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
   const [deletarFornecedor, setDeletarFornecedor] = useState<{ FornecedorId: string }>({ FornecedorId: '' });
+  const { itens: fornecedoresOrdenados, solicitarOrdenacao, obterClassNamesPara } = useOrdenacao(fornecedores);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const buscarDados = async () => {
       try {
         const response = await fetch('/apifornecedor');
         if (!response.ok) {
@@ -30,10 +34,10 @@ function Fornecedores() {
       }
     };
 
-    fetchData();
+    buscarDados();
   }, []);
 
-  const DeleteFornecedor = async () => {
+  const deletarFornecedorAPI = async () => {
     await fetch('/deletarfornecedor', {
       method: 'DELETE',
       headers: {
@@ -44,16 +48,26 @@ function Fornecedores() {
     }).then(res => res.json());
   };
 
-  const DeleteFornecedorState = (fornecedorId: string) => {
+  const deletarFornecedorEstado = (fornecedorId: string) => {
     console.log(fornecedorId);
     setDeletarFornecedor({ FornecedorId: fornecedorId });
   };
 
   useEffect(() => {
     if (deletarFornecedor.FornecedorId !== '') {
-      DeleteFornecedor();
+      deletarFornecedorAPI();
     }
   }, [deletarFornecedor]);
+
+  const renderIconeOrdenacao = (chave: keyof Fornecedor) => {
+    if (!obterClassNamesPara(chave)) {
+      return <FontAwesomeIcon icon={faSortUp} className="sort-icon" />;
+    }
+    if (obterClassNamesPara(chave) === 'ascendente') {
+      return <FontAwesomeIcon icon={faSortUp} className="sort-icon" />;
+    }
+    return <FontAwesomeIcon icon={faSortDown} className="sort-icon" />;
+  };
 
   return (
     <div>
@@ -64,23 +78,33 @@ function Fornecedores() {
         <table className="table table-hover">
           <thead>
             <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Empresa</th>
-              <th scope="col">Responsável</th>
-              <th scope="col">Telefone</th>
-              <th scope="col">CNPJ</th>
+              <th scope="col" onClick={() => solicitarOrdenacao('FornecedorId')} className={obterClassNamesPara('FornecedorId')}>
+                ID {renderIconeOrdenacao('FornecedorId')}
+              </th>
+              <th scope="col" onClick={() => solicitarOrdenacao('Empresa')} className={obterClassNamesPara('Empresa')}>
+                Empresa {renderIconeOrdenacao('Empresa')}
+              </th>
+              <th scope="col" onClick={() => solicitarOrdenacao('Responsavel')} className={obterClassNamesPara('Responsavel')}>
+                Responsável {renderIconeOrdenacao('Responsavel')}
+              </th>
+              <th scope="col" onClick={() => solicitarOrdenacao('Telefone')} className={obterClassNamesPara('Telefone')}>
+                Telefone {renderIconeOrdenacao('Telefone')}
+              </th>
+              <th scope="col" onClick={() => solicitarOrdenacao('Cnpj')} className={obterClassNamesPara('Cnpj')}>
+                CNPJ {renderIconeOrdenacao('Cnpj')}
+              </th>
               <th scope="col">Ação</th>
             </tr>
           </thead>
           <tbody>
-            {fornecedores.map((fornecedor) => (
+            {fornecedoresOrdenados.map((fornecedor) => (
               <tr key={fornecedor.FornecedorId}>
                 <td>{fornecedor.FornecedorId}</td>
                 <td>{fornecedor.Empresa}</td>
                 <td>{fornecedor.Responsavel}</td>
                 <td>{fornecedor.Telefone}</td>
                 <td>{fornecedor.Cnpj}</td>
-                <td><Button onClick={() => DeleteFornecedorState(fornecedor.FornecedorId)}>Deletar</Button></td>
+                <td><Button onClick={() => deletarFornecedorEstado(fornecedor.FornecedorId)}>Deletar</Button></td>
               </tr>
             ))}
           </tbody>

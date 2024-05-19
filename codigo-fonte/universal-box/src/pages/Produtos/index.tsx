@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from '../../Navbar';
+import { useOrdenacao } from '../../context/useOrdenacao';
 
 interface Produto {
   ProdutoId: string;
@@ -16,9 +19,10 @@ interface Produto {
 function Produtos() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [deletarProduto, setDeletarProduto] = useState<{ ProdutoId: string }>({ ProdutoId: '' });
+  const { itens: produtosOrdenados, solicitarOrdenacao, obterClassNamesPara } = useOrdenacao(produtos);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const buscarDados = async () => {
       try {
         const response = await fetch('/api');
         if (!response.ok) {
@@ -31,10 +35,10 @@ function Produtos() {
       }
     };
 
-    fetchData();
+    buscarDados();
   }, []);
 
-  const DeleteProduto = async () => {
+  const deletarProdutoAPI = async () => {
     await fetch('/deletar', {
       method: 'DELETE',
       headers: {
@@ -45,16 +49,26 @@ function Produtos() {
     }).then(res => res.json());
   };
 
-  const DeleteProdutoState = (produtoId: string) => {
+  const deletarProdutoEstado = (produtoId: string) => {
     console.log(produtoId);
     setDeletarProduto({ ProdutoId: produtoId });
   };
 
   useEffect(() => {
     if (deletarProduto.ProdutoId !== '') {
-      DeleteProduto();
+      deletarProdutoAPI();
     }
   }, [deletarProduto]);
+
+  const renderIconeOrdenacao = (chave: keyof Produto) => {
+    if (!obterClassNamesPara(chave)) {
+      return <FontAwesomeIcon icon={faSortUp} className="sort-icon" />;
+    }
+    if (obterClassNamesPara(chave) === 'ascendente') {
+      return <FontAwesomeIcon icon={faSortUp} className="sort-icon" />;
+    }
+    return <FontAwesomeIcon icon={faSortDown} className="sort-icon" />;
+  };
 
   return (
     <div>
@@ -65,17 +79,29 @@ function Produtos() {
         <table className="table table-hover">
           <thead>
             <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Nome</th>
-              <th scope="col">Fornecedor</th>
-              <th scope="col">Modelo</th>
-              <th scope="col">Preço</th>
-              <th scope="col">Quantidade</th>
+              <th scope="col" onClick={() => solicitarOrdenacao('ProdutoId')} className={obterClassNamesPara('ProdutoId')}>
+                ID {renderIconeOrdenacao('ProdutoId')}
+              </th>
+              <th scope="col" onClick={() => solicitarOrdenacao('ProdutoNome')} className={obterClassNamesPara('ProdutoNome')}>
+                Nome {renderIconeOrdenacao('ProdutoNome')}
+              </th>
+              <th scope="col" onClick={() => solicitarOrdenacao('FornecedorNome')} className={obterClassNamesPara('FornecedorNome')}>
+                Fornecedor {renderIconeOrdenacao('FornecedorNome')}
+              </th>
+              <th scope="col" onClick={() => solicitarOrdenacao('ProdutoModelo')} className={obterClassNamesPara('ProdutoModelo')}>
+                Modelo {renderIconeOrdenacao('ProdutoModelo')}
+              </th>
+              <th scope="col" onClick={() => solicitarOrdenacao('ProdutoPreco')} className={obterClassNamesPara('ProdutoPreco')}>
+                Preço {renderIconeOrdenacao('ProdutoPreco')}
+              </th>
+              <th scope="col" onClick={() => solicitarOrdenacao('ProdutoQuantidade')} className={obterClassNamesPara('ProdutoQuantidade')}>
+                Quantidade {renderIconeOrdenacao('ProdutoQuantidade')}
+              </th>
               <th scope="col">Ação</th>
             </tr>
           </thead>
           <tbody>
-            {produtos.map((produto) => (
+            {produtosOrdenados.map((produto) => (
               <tr key={produto.ProdutoId}>
                 <td>{produto.ProdutoId}</td>
                 <td>{produto.ProdutoNome}</td>
@@ -83,7 +109,7 @@ function Produtos() {
                 <td>{produto.ProdutoModelo}</td>
                 <td>{produto.ProdutoPreco}</td>
                 <td>{produto.ProdutoQuantidade}</td>
-                <td><Button onClick={() => DeleteProdutoState(produto.ProdutoId)}>Deletar</Button></td>
+                <td><Button onClick={() => deletarProdutoEstado(produto.ProdutoId)}>Deletar</Button></td>
               </tr>
             ))}
           </tbody>

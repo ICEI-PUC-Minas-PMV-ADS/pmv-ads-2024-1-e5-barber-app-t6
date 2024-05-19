@@ -32,3 +32,12 @@ code {
     align-items: center;
     /* Alinha verticalmente os itens na navbar */
 }
+
+/* Adicione este bloco de código CSS no arquivo CSS correspondente */
+.sort-icon {
+    visibility: hidden;
+  }
+  
+  th:hover .sort-icon {
+    visibility: visible;
+  }
