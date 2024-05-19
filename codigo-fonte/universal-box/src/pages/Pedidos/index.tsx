@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,6 +18,10 @@ function Pedidos() {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [deletarPedido, setDeletarPedido] = useState<{ PedidoId: number | null }>({ PedidoId: null });
   const { itens: pedidosOrdenados, solicitarOrdenacao, obterClassNamesPara } = useOrdenacao(pedidos);
+
+  const [filtroProduto, setFiltroProduto] = useState('');
+  const [filtroCliente, setFiltroCliente] = useState('');
+  const [filtroQuantidade, setFiltroQuantidade] = useState('');
 
   useEffect(() => {
     const buscarPedidos = async () => {
@@ -58,6 +62,18 @@ function Pedidos() {
     }
   }, [deletarPedido]);
 
+  const handleFiltroProduto = (e: ChangeEvent<HTMLInputElement>) => setFiltroProduto(e.target.value);
+  const handleFiltroCliente = (e: ChangeEvent<HTMLInputElement>) => setFiltroCliente(e.target.value);
+  const handleFiltroQuantidade = (e: ChangeEvent<HTMLInputElement>) => setFiltroQuantidade(e.target.value);
+
+  const pedidosFiltrados = pedidosOrdenados.filter(pedido => {
+    return (
+      (pedido.ProdutoNome?.toLowerCase().includes(filtroProduto.toLowerCase()) ?? true) &&
+      (pedido.ClienteNome?.toLowerCase().includes(filtroCliente.toLowerCase()) ?? true) &&
+      (filtroQuantidade === '' || pedido.Quantidade === parseInt(filtroQuantidade))
+    );
+  });
+
   const renderIconeOrdenacao = (chave: keyof Pedido) => {
     if (!obterClassNamesPara(chave)) {
       return <FontAwesomeIcon icon={faSortUp} className="sort-icon" />;
@@ -74,6 +90,19 @@ function Pedidos() {
       <div className="container mt-5">
         <h2>Lista de Pedidos</h2>
         <Link to="/cadastroPedido" className="btn btn-primary mb-3">Cadastrar Novo Pedido</Link>
+
+        <div className="row mb-3">
+          <div className="col">
+            <input type="text" className="form-control" placeholder="Produto" value={filtroProduto} onChange={handleFiltroProduto} />
+          </div>
+          <div className="col">
+            <input type="text" className="form-control" placeholder="Cliente" value={filtroCliente} onChange={handleFiltroCliente} />
+          </div>
+          <div className="col">
+            <input type="text" className="form-control" placeholder="Quantidade" value={filtroQuantidade} onChange={handleFiltroQuantidade} />
+          </div>
+        </div>
+
         <table className="table table-hover">
           <thead>
             <tr>
@@ -93,7 +122,7 @@ function Pedidos() {
             </tr>
           </thead>
           <tbody>
-            {pedidosOrdenados.map((pedido) => (
+            {pedidosFiltrados.map((pedido) => (
               <tr key={pedido.PedidoId}>
                 <td>{pedido.PedidoId}</td>
                 <td>{pedido.ProdutoNome}</td>

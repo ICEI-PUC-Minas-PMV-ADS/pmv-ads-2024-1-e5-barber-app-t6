@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -20,6 +20,12 @@ function Produtos() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [deletarProduto, setDeletarProduto] = useState<{ ProdutoId: string }>({ ProdutoId: '' });
   const { itens: produtosOrdenados, solicitarOrdenacao, obterClassNamesPara } = useOrdenacao(produtos);
+
+  const [filtroNome, setFiltroNome] = useState('');
+  const [filtroFornecedor, setFiltroFornecedor] = useState('');
+  const [filtroModelo, setFiltroModelo] = useState('');
+  const [filtroPreco, setFiltroPreco] = useState('');
+  const [filtroQuantidade, setFiltroQuantidade] = useState('');
 
   useEffect(() => {
     const buscarDados = async () => {
@@ -60,6 +66,22 @@ function Produtos() {
     }
   }, [deletarProduto]);
 
+  const handleFiltroNome = (e: ChangeEvent<HTMLInputElement>) => setFiltroNome(e.target.value);
+  const handleFiltroFornecedor = (e: ChangeEvent<HTMLInputElement>) => setFiltroFornecedor(e.target.value);
+  const handleFiltroModelo = (e: ChangeEvent<HTMLInputElement>) => setFiltroModelo(e.target.value);
+  const handleFiltroPreco = (e: ChangeEvent<HTMLInputElement>) => setFiltroPreco(e.target.value);
+  const handleFiltroQuantidade = (e: ChangeEvent<HTMLInputElement>) => setFiltroQuantidade(e.target.value);
+
+  const produtosFiltrados = produtosOrdenados.filter(produto => {
+    return (
+      (produto.ProdutoNome?.toLowerCase().includes(filtroNome.toLowerCase()) ?? true) &&
+      (produto.FornecedorNome?.toLowerCase().includes(filtroFornecedor.toLowerCase()) ?? true) &&
+      (produto.ProdutoModelo?.toLowerCase().includes(filtroModelo.toLowerCase()) ?? true) &&
+      (filtroPreco === '' || produto.ProdutoPreco === parseFloat(filtroPreco)) &&
+      (produto.ProdutoQuantidade?.includes(filtroQuantidade) ?? true)
+    );
+  });
+
   const renderIconeOrdenacao = (chave: keyof Produto) => {
     if (!obterClassNamesPara(chave)) {
       return <FontAwesomeIcon icon={faSortUp} className="sort-icon" />;
@@ -76,6 +98,25 @@ function Produtos() {
       <div className="container mt-5">
         <h2>Lista de Produtos</h2>
         <Link to="/cadastroproduto" className="btn btn-primary mb-3">Cadastrar Novo Produto</Link>
+
+        <div className="row mb-3">
+          <div className="col">
+            <input type="text" className="form-control" placeholder="Nome" value={filtroNome} onChange={handleFiltroNome} />
+          </div>
+          <div className="col">
+            <input type="text" className="form-control" placeholder="Fornecedor" value={filtroFornecedor} onChange={handleFiltroFornecedor} />
+          </div>
+          <div className="col">
+            <input type="text" className="form-control" placeholder="Modelo" value={filtroModelo} onChange={handleFiltroModelo} />
+          </div>
+          <div className="col">
+            <input type="text" className="form-control" placeholder="Preço" value={filtroPreco} onChange={handleFiltroPreco} />
+          </div>
+          <div className="col">
+            <input type="text" className="form-control" placeholder="Quantidade" value={filtroQuantidade} onChange={handleFiltroQuantidade} />
+          </div>
+        </div>
+
         <table className="table table-hover">
           <thead>
             <tr>
@@ -101,7 +142,7 @@ function Produtos() {
             </tr>
           </thead>
           <tbody>
-            {produtosOrdenados.map((produto) => (
+            {produtosFiltrados.map((produto) => (
               <tr key={produto.ProdutoId}>
                 <td>{produto.ProdutoId}</td>
                 <td>{produto.ProdutoNome}</td>

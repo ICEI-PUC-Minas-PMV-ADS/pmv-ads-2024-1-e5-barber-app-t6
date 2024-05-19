@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../Navbar';
 import { AuthContext } from '../../context/AuthContext';
@@ -24,6 +24,11 @@ function Clientes() {
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [deletarCliente, setDeletarCliente] = useState<{ ClienteId: string }>({ ClienteId: '' });
   const { itens: clientesOrdenados, solicitarOrdenacao, obterClassNamesPara } = useOrdenacao(clientes);
+
+  const [filtroNome, setFiltroNome] = useState('');
+  const [filtroCpf, setFiltroCpf] = useState('');
+  const [filtroTelefone, setFiltroTelefone] = useState('');
+  const [filtroCep, setFiltroCep] = useState('');
 
   useEffect(() => {
     const fetchClientes = async () => {
@@ -64,6 +69,20 @@ function Clientes() {
     }
   }, [deletarCliente]);
 
+  const handleFiltroNome = (e: ChangeEvent<HTMLInputElement>) => setFiltroNome(e.target.value);
+  const handleFiltroCpf = (e: ChangeEvent<HTMLInputElement>) => setFiltroCpf(e.target.value);
+  const handleFiltroTelefone = (e: ChangeEvent<HTMLInputElement>) => setFiltroTelefone(e.target.value);
+  const handleFiltroCep = (e: ChangeEvent<HTMLInputElement>) => setFiltroCep(e.target.value);
+
+  const clientesFiltrados = clientesOrdenados.filter(cliente => {
+    return (
+      (cliente.ClienteNome?.toLowerCase().includes(filtroNome.toLowerCase()) ?? true) &&
+      (cliente.ClienteCpf?.toLowerCase().includes(filtroCpf.toLowerCase()) ?? true) &&
+      (cliente.ClienteTelefone?.toLowerCase().includes(filtroTelefone.toLowerCase()) ?? true) &&
+      (cliente.ClienteCep?.toLowerCase().includes(filtroCep.toLowerCase()) ?? true)
+    );
+  });
+
   const renderIconeOrdenacao = (chave: keyof Cliente) => {
     if (!obterClassNamesPara(chave)) {
       return <FontAwesomeIcon icon={faSortUp} className="sort-icon" />;
@@ -80,6 +99,22 @@ function Clientes() {
       <div className="container mt-5">
         <h2>Lista de Clientes</h2>
         <Link to="/cadastrocliente" className="btn btn-primary mb-3">Cadastrar Novo Cliente</Link>
+
+        <div className="row mb-3">
+          <div className="col">
+            <input type="text" className="form-control" placeholder="Nome" value={filtroNome} onChange={handleFiltroNome} />
+          </div>
+          <div className="col">
+            <input type="text" className="form-control" placeholder="CPF" value={filtroCpf} onChange={handleFiltroCpf} />
+          </div>
+          <div className="col">
+            <input type="text" className="form-control" placeholder="Telefone" value={filtroTelefone} onChange={handleFiltroTelefone} />
+          </div>
+          <div className="col">
+            <input type="text" className="form-control" placeholder="CEP" value={filtroCep} onChange={handleFiltroCep} />
+          </div>
+        </div>
+
         <table className="table table-hover">
           <thead>
             <tr>
@@ -102,7 +137,7 @@ function Clientes() {
             </tr>
           </thead>
           <tbody>
-            {clientesOrdenados.map((cliente) => (
+            {clientesFiltrados.map((cliente) => (
               <tr key={cliente.ClienteId}>
                 <td>{cliente.ClienteId}</td>
                 <td>{cliente.ClienteNome}</td>

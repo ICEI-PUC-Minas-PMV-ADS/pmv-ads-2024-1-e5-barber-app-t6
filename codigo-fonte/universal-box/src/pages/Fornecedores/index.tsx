@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,6 +19,11 @@ function Fornecedores() {
   const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
   const [deletarFornecedor, setDeletarFornecedor] = useState<{ FornecedorId: string }>({ FornecedorId: '' });
   const { itens: fornecedoresOrdenados, solicitarOrdenacao, obterClassNamesPara } = useOrdenacao(fornecedores);
+
+  const [filtroEmpresa, setFiltroEmpresa] = useState('');
+  const [filtroResponsavel, setFiltroResponsavel] = useState('');
+  const [filtroTelefone, setFiltroTelefone] = useState('');
+  const [filtroCnpj, setFiltroCnpj] = useState('');
 
   useEffect(() => {
     const buscarDados = async () => {
@@ -59,6 +64,20 @@ function Fornecedores() {
     }
   }, [deletarFornecedor]);
 
+  const handleFiltroEmpresa = (e: ChangeEvent<HTMLInputElement>) => setFiltroEmpresa(e.target.value);
+  const handleFiltroResponsavel = (e: ChangeEvent<HTMLInputElement>) => setFiltroResponsavel(e.target.value);
+  const handleFiltroTelefone = (e: ChangeEvent<HTMLInputElement>) => setFiltroTelefone(e.target.value);
+  const handleFiltroCnpj = (e: ChangeEvent<HTMLInputElement>) => setFiltroCnpj(e.target.value);
+
+  const fornecedoresFiltrados = fornecedoresOrdenados.filter(fornecedor => {
+    return (
+      (fornecedor.Empresa?.toLowerCase().includes(filtroEmpresa.toLowerCase()) ?? true) &&
+      (fornecedor.Responsavel?.toLowerCase().includes(filtroResponsavel.toLowerCase()) ?? true) &&
+      (fornecedor.Telefone?.toLowerCase().includes(filtroTelefone.toLowerCase()) ?? true) &&
+      (fornecedor.Cnpj?.toLowerCase().includes(filtroCnpj.toLowerCase()) ?? true)
+    );
+  });
+
   const renderIconeOrdenacao = (chave: keyof Fornecedor) => {
     if (!obterClassNamesPara(chave)) {
       return <FontAwesomeIcon icon={faSortUp} className="sort-icon" />;
@@ -75,6 +94,22 @@ function Fornecedores() {
       <div className="container mt-5">
         <h2>Lista de Fornecedores</h2>
         <Link to="/cadastrofornecedor" className="btn btn-primary mb-3">Cadastrar Novo Fornecedor</Link>
+
+        <div className="row mb-3">
+          <div className="col">
+            <input type="text" className="form-control" placeholder="Empresa" value={filtroEmpresa} onChange={handleFiltroEmpresa} />
+          </div>
+          <div className="col">
+            <input type="text" className="form-control" placeholder="Responsável" value={filtroResponsavel} onChange={handleFiltroResponsavel} />
+          </div>
+          <div className="col">
+            <input type="text" className="form-control" placeholder="Telefone" value={filtroTelefone} onChange={handleFiltroTelefone} />
+          </div>
+          <div className="col">
+            <input type="text" className="form-control" placeholder="CNPJ" value={filtroCnpj} onChange={handleFiltroCnpj} />
+          </div>
+        </div>
+
         <table className="table table-hover">
           <thead>
             <tr>
@@ -97,7 +132,7 @@ function Fornecedores() {
             </tr>
           </thead>
           <tbody>
-            {fornecedoresOrdenados.map((fornecedor) => (
+            {fornecedoresFiltrados.map((fornecedor) => (
               <tr key={fornecedor.FornecedorId}>
                 <td>{fornecedor.FornecedorId}</td>
                 <td>{fornecedor.Empresa}</td>
