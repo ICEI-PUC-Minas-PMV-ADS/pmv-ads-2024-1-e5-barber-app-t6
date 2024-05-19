@@ -1,0 +1,34 @@
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
+}
+
+.form-inline {
+    display: flex;
+    align-items: center;
+}
+
+.form-label {
+    margin-right: 8px;
+    /* Espaço entre o label e a caixa de busca */
+}
+
+.form-control {
+    margin-right: 8px;
+    /* Espaço entre a caixa de busca e o botão */
+}
+
+/* Para garantir que tudo está alinhado corretamente */
+.navbar {
+    align-items: center;
+    /* Alinha verticalmente os itens na navbar */
+}
