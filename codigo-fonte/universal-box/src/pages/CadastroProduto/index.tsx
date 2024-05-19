@@ -1,34 +1,65 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import Navbar from '../../Navbar';
 import { useNavigate } from 'react-router-dom';
+import Select from 'react-select';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+interface Fornecedor {
+  FornecedorId: number;
+  Empresa: string;
+}
 
 function CadastroProduto() {
-  const navigate = useNavigate(); 
-  const [produtos, setProdutos] = useState({ ProdutoNome: '', FornecedorNome: '', ProdutoModelo: '', ProdutoPreco: '', ProdutoQuantidade: '' });
+  const navigate = useNavigate();
+  const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
+  const [produto, setProduto] = useState({ ProdutoNome: '', FornecedorId: 0, ProdutoModelo: '', ProdutoPreco: 0, ProdutoQuantidade: 0 });
+
+  // Buscar lista de fornecedores
+  useEffect(() => {
+    const fetchFornecedores = async () => {
+      try {
+        const response = await fetch('/apifornecedor');
+        if (!response.ok) {
+          throw new Error('Erro ao obter os dados');
+        }
+        const data = await response.json();
+        console.log(data);
+        setFornecedores(data);
+      } catch (error) {
+        console.error('Erro:', error);
+      }
+    };
+
+    fetchFornecedores();
+  }, []);
 
   const setInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-  
-    setProdutos(prevState => ({
+    setProduto(prevState => ({
       ...prevState,
-      [name]: name === 'ProdutoQuantidade' ? parseInt(value) : value,
-      [name]: name === 'ProdutoPreco' ? parseFloat(value) : value
+      [name]: name === 'ProdutoPreco' ? parseFloat(value) : name === 'ProdutoQuantidade' ? parseInt(value) : value
     }));
-  }
+  };
+
+  const setFornecedorSel = (selectedOption: { value: number }) => {
+    setProduto(prevState => ({
+      ...prevState,
+      FornecedorId: selectedOption.value
+    }));
+  };
 
   const createProduto = async () => {
-    const newData = await fetch('/criar', {
+    await fetch('/criar', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      body: JSON.stringify(produtos)
-    })
-      .then(res => res.json());
+      body: JSON.stringify(produto)
+    }).then(res => res.json());
 
     navigate('/produtos');
-  }
+  };
 
   return (
     <div>
@@ -40,42 +71,41 @@ function CadastroProduto() {
               <div className="card-body">
                 <h1 className="card-title">Cadastrar Produto</h1>
                 <div className="form-group">
-                  
                   <input
                     className="form-control mb-3"
                     placeholder="Nome"
                     name="ProdutoNome"
-                    value={produtos.ProdutoNome}
+                    value={produto.ProdutoNome}
                     onChange={setInput} />
 
-                  <input
-                    className="form-control mb-3"
+                  <Select
+                    className="mb-3"
                     placeholder="Fornecedor"
-                    name="FornecedorNome"
-                    value={produtos.FornecedorNome}
-                    onChange={setInput} />
+                    options={fornecedores.map(fornecedor => ({ value: fornecedor.FornecedorId, label: fornecedor.Empresa }))}
+                    onChange={(e) => setFornecedorSel(e as { value: number })}
+                  />
 
                   <input
                     className="form-control mb-3"
                     placeholder="Modelo"
                     name="ProdutoModelo"
-                    value={produtos.ProdutoModelo}
+                    value={produto.ProdutoModelo}
                     onChange={setInput} />
 
                   <input
-                    type='number'
+                    type="number"
                     className="form-control mb-3"
                     placeholder="Preço"
                     name="ProdutoPreco"
-                    value={produtos.ProdutoPreco}
+                    value={produto.ProdutoPreco}
                     onChange={setInput} />
 
-<input
-                    type='number'
+                  <input
+                    type="number"
                     className="form-control mb-3"
                     placeholder="Quantidade"
                     name="ProdutoQuantidade"
-                    value={produtos.ProdutoQuantidade}
+                    value={produto.ProdutoQuantidade}
                     onChange={setInput} />
                 </div>
                 <button

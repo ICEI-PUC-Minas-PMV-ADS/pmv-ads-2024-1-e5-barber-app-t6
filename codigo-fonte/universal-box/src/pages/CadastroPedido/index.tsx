@@ -120,11 +120,13 @@ function CadastroPedidos() {
                 <h1 className="card-title">Novo Pedido</h1>
                 <div className="form-group">
                   <Select
+                    className="mb-3"
                     placeholder="Produto"
                     options={produtos.map((produto) => ({ value: produto.ProdutoId, label: produto.ProdutoNome }))}
                     onChange={(e) => setProdSel(e as { value: number })}
                   />
                   <Select
+                    className="mb-3"
                     placeholder="Cliente"
                     options={clientes.map((cliente) => ({ value: cliente.ClienteId, label: cliente.ClienteNome }))}
                     onChange={(e) => setCliSel(e as { value: number })}
