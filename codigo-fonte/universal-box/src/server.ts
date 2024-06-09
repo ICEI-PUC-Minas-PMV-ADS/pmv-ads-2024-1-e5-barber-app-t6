@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import sql, { PoolOptions, RowDataPacket } from 'mysql2/promise';
+import sql, { PoolOptions, RowDataPacket, ResultSetHeader } from 'mysql2/promise';
 import jwt from 'jsonwebtoken';
 
 const API_PORT = process.env.PORT || 5555;
@@ -37,7 +37,7 @@ app.get('/api', async (req: Request, res: Response) => {
 app.post('/criar', async (req: Request, res: Response) => {
   try {
     let pool = await sql.createPool(config);
-    await pool.query('INSERT INTO UniversalBox.Produtos (ProdutoNome, FornecedorNome, ProdutoModelo, ProdutoPreco, Quantidade) VALUES (?, ?, ?, ?, ?)', 
+    await pool.query('INSERT INTO UniversalBox.Produtos (ProdutoNome, FornecedorNome, ProdutoModelo, ProdutoPreco, Quantidade) VALUES (?, ?, ?, ?, ?)',
       [req.body.ProdutoNome, req.body.FornecedorNome, req.body.ProdutoModelo, req.body.ProdutoPreco, req.body.ProdutoQuantidade]);
     let [produtos] = await pool.query<RowDataPacket[]>('SELECT * from UniversalBox.Produtos');
     console.log('Produtos após criação:', produtos);
@@ -79,7 +79,7 @@ app.get('/apicliente', async (req: Request, res: Response) => {
 app.post('/criarcliente', async (req: Request, res: Response) => {
   try {
     let pool = await sql.createPool(config);
-    await pool.query('INSERT INTO UniversalBox.Clientes (ClienteNome, ClienteCpf, ClienteTelefone, ClienteCep) VALUES (?, ?, ?, ?)', 
+    await pool.query('INSERT INTO UniversalBox.Clientes (ClienteNome, ClienteCpf, ClienteTelefone, ClienteCep) VALUES (?, ?, ?, ?)',
       [req.body.ClienteNome, req.body.ClienteCpf, req.body.ClienteTelefone, req.body.ClienteCep]);
     let [clientes] = await pool.query<RowDataPacket[]>('SELECT * from UniversalBox.Clientes');
     console.log('Clientes após criação:', clientes);
@@ -92,15 +92,15 @@ app.post('/criarcliente', async (req: Request, res: Response) => {
 
 app.delete('/deletarCliente', async (req, res) => {
   try {
-       console.log(req.body.ClienteId)
-       let pool = await sql.createPool(config);
-       let deletarCliente = await pool.query(
-            `DELETE FROM UniversalBox.Clientes
+    console.log(req.body.ClienteId)
+    let pool = await sql.createPool(config);
+    let deletarCliente = await pool.query(
+      `DELETE FROM UniversalBox.Clientes
             WHERE ClienteId = ${req.body.ClienteId}
        `)
   }
   catch (error) {
-       console.log(error);
+    console.log(error);
   }
 })
 
@@ -110,109 +110,109 @@ app.delete('/deletarCliente', async (req, res) => {
 
 app.get('/apipedido', async (req, res) => {
   try {
-       let pool = await sql.createPool(config);
-       let pedidos = await pool.query(
-            `SELECT pe.PedidoId, pr.ProdutoNome, cl.ClienteNome, pe.Quantidade
+    let pool = await sql.createPool(config);
+    let pedidos = await pool.query(
+      `SELECT pe.PedidoId, pr.ProdutoNome, cl.ClienteNome, pe.Quantidade
             FROM UniversalBox.Pedidos pe
             JOIN UniversalBox.Produtos pr ON pr.ProdutoId = pe.ProdutoId
             JOIN UniversalBox.Clientes cl ON cl.ClienteId = pe.ClienteId`);
-       res.send(pedidos[0]);
+    res.send(pedidos[0]);
   }
   catch (error) {
-       console.log(error);
+    console.log(error);
   }
 });
 
 
 app.post('/criarpedido', async (req, res) => {
   try {
-       let pool = await sql.createPool(config);
-       let criarPedidos = await pool.query(
-            `INSERT INTO UniversalBox.Pedidos
+    let pool = await sql.createPool(config);
+    let criarPedidos = await pool.query(
+      `INSERT INTO UniversalBox.Pedidos
                  (ProdutoId, ClienteId, Quantidade)
                  VALUES
                 ('${req.body.ProdutoId}',
                '${req.body.ClienteId}',
-                '${req.body.Quantidade}')`
-       )
-       let ajusteQuantidade = await pool.query(
-            `UPDATE UniversalBox.Produtos p
-            join UniversalBox.Pedidos pe on pe.ProdutoId = p.ProdutoId
-            SET p.Quantidade = p.Quantidade - pe.Quantidade
-            WHERE p.ProdutoId = ${req.body.ProdutoId}`
-       )
+                '${req.body.Quantidade}');`
+    )
+    const result = JSON.parse(JSON.stringify(criarPedidos))
+    let ajusteQuantidade = await pool.query(
+      `UPDATE UniversalBox.Produtos p
+             join UniversalBox.Pedidos pe on pe.ProdutoId = p.ProdutoId
+             SET p.ProdutoQuantidade = p.ProdutoQuantidade - pe.Quantidade
+             WHERE p.ProdutoId = ${req.body.ProdutoId} AND pe.PedidoId = ${result[0].insertId}`
+    )
 
-       let pedidos = await pool.query(`SELECT * from UniversalBox.Pedidos`);
-       res.send(pedidos[0]);
+    let pedidos = await pool.query(`SELECT * from UniversalBox.Pedidos`);
+    res.send(pedidos[0]);
   }
   catch (error) {
-       console.log(error);
+    console.log(error);
   }
 });
 
 app.delete('/deletarpedido', async (req, res) => {
   try {
-       let pool = await sql.createPool(config);
-       let deletarPedido = await pool.query(
-            `DELETE FROM UniversalBox.Pedidos
+    let pool = await sql.createPool(config);
+    let deletarPedido = await pool.query(
+      `DELETE FROM UniversalBox.Pedidos
             WHERE PedidoId = ${req.body.PedidoId}
        `)
   }
   catch (error) {
-       console.log(error);
+    console.log(error);
   }
 })
 //#endregion
 
-//# Fornecedores
+//#region Fornecedores
 app.get('/apifornecedor', async (req, res) => {
   try {
-       let pool = await sql.createPool(config);
-       let fornecedores = await pool.query(
-            `SELECT * from UniversalBox.Fornecedores`);
-       res.send(fornecedores[0]);
+    let pool = await sql.createPool(config);
+    let fornecedores = await pool.query(
+      `SELECT * from UniversalBox.Fornecedores`);
+    res.send(fornecedores[0]);
   }
   catch (error) {
-       console.log(error);
+    console.log(error);
   }
 });
 
 
 app.post('/criarfornecedor', async (req, res) => {
   try {
-       let pool = await sql.createPool(config);
-       let criarFornecedores = await pool.query(
-            `INSERT INTO UniversalBox.Fornecedores (Empresa, Responsavel, Telefone, Cnpj) VALUES
+    let pool = await sql.createPool(config);
+    let criarFornecedores = await pool.query(
+      `INSERT INTO UniversalBox.Fornecedores (Empresa, Responsavel, Telefone, Cnpj) VALUES
             ('${req.body.FornecedorEmpresa}',
             '${req.body.FornecedorResponsavel}',
             '${req.body.FornecedorTelefone}',
             '${req.body.FornecedorCnpj}')`
-       )
-       let fornecedores = await pool.query(`SELECT * from UniversalBox.Pedidos`);
-       res.send(fornecedores[0]);
+    )
+    let fornecedores = await pool.query(`SELECT * from UniversalBox.Pedidos`);
+    res.send(fornecedores[0]);
   }
   catch (error) {
-       console.log(error);
+    console.log(error);
   }
 });
 
 app.delete('/deletarfornecedor', async (req, res) => {
   try {
-       console.log(req.body.ClienteId)
-       let pool = await sql.createPool(config);
-       let deletarPedido = await pool.query(
-            `DELETE FROM UniversalBox.Fornecedores
+    console.log(req.body.ClienteId)
+    let pool = await sql.createPool(config);
+    let deletarPedido = await pool.query(
+      `DELETE FROM UniversalBox.Fornecedores
             WHERE FornecedorId = ${req.body.FornecedorId}
        `)
   }
   catch (error) {
-       console.log(error);
+    console.log(error);
   }
 })
 //#endregion
 
 //#region Usuarios
-// UsuarioId, Email, Username, Senha (ID é auto increment, não precisa passar o valor pra criar)
 
 app.post('/apiusuario', async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -248,6 +248,31 @@ app.post('/apiusuario', async (req: Request, res: Response) => {
     return res.status(500).send('Server error');
   }
 });
+
+app.post('/criarUsuario', async (req, res) => {
+  try {
+    let pool = await sql.createPool(config);
+    let criarUsuarios = await pool.query(
+      `INSERT INTO UniversalBox.Usuarios (Email, Username, Senha) VALUES
+            ('${req.body.Email}',
+            '${req.body.Username}',
+            '${req.body.Senha}')`
+    )
+
+    await fetch('/apiusuario', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(req.body)
+    });
+  }
+  catch (error) {
+    console.log(error);
+  }
+});
+
 
 //#endregion
 

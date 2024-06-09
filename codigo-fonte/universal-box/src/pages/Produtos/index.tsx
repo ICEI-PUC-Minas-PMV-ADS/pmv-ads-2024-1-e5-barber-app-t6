@@ -13,7 +13,7 @@ interface Produto {
   FornecedorNome: string;
   ProdutoModelo: string;
   ProdutoPreco: number;
-  ProdutoQuantidade: string;
+  ProdutoQuantidade: number;
 }
 
 function Produtos() {
@@ -78,7 +78,7 @@ function Produtos() {
       (produto.FornecedorNome?.toLowerCase().includes(filtroFornecedor.toLowerCase()) ?? true) &&
       (produto.ProdutoModelo?.toLowerCase().includes(filtroModelo.toLowerCase()) ?? true) &&
       (filtroPreco === '' || produto.ProdutoPreco === parseFloat(filtroPreco)) &&
-      (produto.ProdutoQuantidade?.includes(filtroQuantidade) ?? true)
+      (filtroQuantidade === '' || produto.ProdutoQuantidade === parseInt(filtroQuantidade))
     );
   });
 
