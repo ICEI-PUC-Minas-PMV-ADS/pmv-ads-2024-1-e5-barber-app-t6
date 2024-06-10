@@ -15,6 +15,7 @@ Passos:
 Critérios de êxito: Todos os produtos presentes no banco de dados devem ser exibidos na página.
 
 ![Teste 01](img/teste01.png)
+![Teste 01](img/teste01_01.png)
 
 
 ## Caso de teste 2: Cadastro de Novo Produto
@@ -33,6 +34,7 @@ Passos:
 Critérios de êxito: O produto deve ser exibido na listagem de produtos após o cadastro.
 
 ![Teste 02](img/teste02.png)
+![Teste 02](img/teste02_01.png)
 
 ## Caso de teste 3: Deletar Produto
 Identificador: CT-003
@@ -84,6 +86,7 @@ Passos:
 Critérios de êxito: O cliente deve ser exibido na listagem de clientes após o cadastro.
 
 ![Teste 05](img/teste05.png)
+![Teste 05](img/teste05_01.png)
 
 
 ## Caso de teste 6: Deletar Cliente
@@ -117,6 +120,7 @@ Passos:
 Critérios de êxito: Todos os pedidos presentes no banco de dados devem ser exibidos na página.
 
 ![Teste 07](img/teste07.png)
+![Teste 07](img/teste07_01.png)
 
 
 ## Caso de teste 8: Cadastro de Novo Pedido
@@ -172,6 +176,8 @@ Passos:
 Critérios de êxito: O usuário deve ser redirecionado para a página inicial após o login com credenciais válidas.
 
 ![Teste 10](img/teste10.png)
+![Teste 10](img/teste10_01.png)
+![Teste 10](img/teste10_02.png)
 
 
 ## Caso de teste 11: Login com Credenciais Inválidas
@@ -190,6 +196,7 @@ Passos:
 Critérios de êxito: Uma mensagem de erro deve ser exibida indicando que as credenciais são incorretas.
 
 ![Teste 11](img/teste11.png)
+![Teste 11](img/teste11_01.png)
 
 
 ## Caso de teste 12: Redirecionamento após Login
