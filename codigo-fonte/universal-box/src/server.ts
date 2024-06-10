@@ -37,7 +37,7 @@ app.get('/api', async (req: Request, res: Response) => {
 app.post('/criar', async (req: Request, res: Response) => {
   try {
     let pool = await sql.createPool(config);
-    await pool.query('INSERT INTO UniversalBox.Produtos (ProdutoNome, FornecedorNome, ProdutoModelo, ProdutoPreco, Quantidade) VALUES (?, ?, ?, ?, ?)',
+    await pool.query('INSERT INTO UniversalBox.Produtos (ProdutoNome, FornecedorNome, ProdutoModelo, ProdutoPreco, ProdutoQuantidade) VALUES (?, ?, ?, ?, ?)',
       [req.body.ProdutoNome, req.body.FornecedorNome, req.body.ProdutoModelo, req.body.ProdutoPreco, req.body.ProdutoQuantidade]);
     let [produtos] = await pool.query<RowDataPacket[]>('SELECT * from UniversalBox.Produtos');
     console.log('Produtos após criação:', produtos);
