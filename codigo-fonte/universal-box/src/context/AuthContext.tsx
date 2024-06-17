@@ -5,6 +5,12 @@ interface LoginCredentials {
   password: string;
 }
 
+interface RegisterCredentials {
+  username: string;
+  email: string;
+  password: string;
+}
+
 interface AuthState {
   token: string;
   email: string;
@@ -12,6 +18,7 @@ interface AuthState {
 
 interface AuthContextData {
   email: string;
+  register(credentials: RegisterCredentials): Promise<void>;
   login(credentials: LoginCredentials): Promise<void>;
   logout(): void;
 }
@@ -34,6 +41,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     return {} as AuthState;
   });
+
+  //LOGIN
 
   const login = useCallback(async (credentials: LoginCredentials): Promise<void> => {
     console.log('Login attempt with credentials:', credentials);
@@ -63,6 +72,36 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
+  //REGISTRO
+  const register = useCallback(async (credentials: RegisterCredentials): Promise<void> => {
+    console.log('Register attempt with credentials:', credentials);
+    const response = await fetch('/criarUsuario', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(credentials)
+    });
+
+    const data = await response.json();
+    console.log('Response from API:', data);
+
+    const { token, email } = data;
+
+    if (response.ok && token) {
+      localStorage.setItem('@universal:token', token);
+      localStorage.setItem('@universal:email', email);
+
+      console.log('Token and email stored in LocalStorage:', { token, email });
+
+      setData({ token, email });
+    } else {
+      throw new Error('Credenciais incorretas');
+    }
+  }, []);
+
+  //LOGOUT
   const logout = useCallback(() => {
     localStorage.removeItem('@universal:token');
     localStorage.removeItem('@universal:email');
@@ -71,7 +110,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ email: data.email, login, logout }}>
+    <AuthContext.Provider value={{ email: data.email, register, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

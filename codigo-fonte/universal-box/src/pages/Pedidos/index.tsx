@@ -6,7 +6,7 @@ import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from '../../Navbar';
 import { useOrdenacao } from '../../context/useOrdenacao';
-import generatePDF from '../Relatórios/Relatorios';
+import generatePDF from '../Relatórios/Index';
 import { format } from "date-fns";
 import Status from '../../enums/Status';
 
@@ -108,7 +108,7 @@ function Pedidos() {
       <div className="container mt-5">
         <h2>Lista de Pedidos</h2>
         <Link to="/cadastroPedido" className="btn btn-primary mb-3">Cadastrar Novo Pedido</Link>
-        <Button className="btn btn-primary mb-3" onClick={() => generatePDF(pedidos.filter(pedido => pedido.DataEntrega > new Date()))}>Gerar Relatório</Button>
+        <Button className="btn btn-primary mb-3" onClick={() => generatePDF(pedidos)}>Gerar Relatório</Button>
 
         <div className="row mb-3">
           <div className="col">

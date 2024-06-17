@@ -217,6 +217,7 @@ app.delete('/deletarfornecedor', async (req, res) => {
 //#region Usuarios
 
 app.post('/apiusuario', async (req: Request, res: Response) => {
+  console.log('teste login' + req.body)
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -251,24 +252,25 @@ app.post('/apiusuario', async (req: Request, res: Response) => {
   }
 });
 
-app.post('/criarUsuario', async (req, res) => {
+app.post('/criarUsuario', async (req: Request, res: Response) => {
   try {
+    console.log("teste criar" + req.body)
+    const { username, email, password } = req.body;
     let pool = await sql.createPool(config);
-    let criarUsuarios = await pool.query(
+    let criarUsuario = await pool.query(
       `INSERT INTO UniversalBox.Usuarios (Email, Username, Senha) VALUES
-            ('${req.body.Email}',
-            '${req.body.Username}',
-            '${req.body.Senha}')`
+            ('${email}',
+            '${username}',
+            '${password}')`
+    )
+    const result = JSON.parse(JSON.stringify(criarUsuario));
+    let [user] = await pool.query<RowDataPacket[]>(
+      `SELECT * FROM UniversalBox.Usuarios WHERE UsuarioId = ${result[0].insertId}`
     )
 
-    await fetch('/apiusuario', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(req.body)
-    });
+    const token = jwt.sign({ email: user[0].Email }, jwtSecret, { expiresIn: '1h' });
+    console.log('Validação de senha bem-sucedida. Token gerado:', token);
+    return res.json({ token, email: user[0].Email });
   }
   catch (error) {
     console.log(error);

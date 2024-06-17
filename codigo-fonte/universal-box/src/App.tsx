@@ -13,6 +13,7 @@ import RotasPrivadas from './context/RotasPrivadas';
 import Pedidos from './pages/Pedidos';
 import CadastroPedido from './pages/CadastroPedido'
 import Fornecedores from './pages/Fornecedores';
+import CadastroUsuario from './pages/CadastroUsuario';
 
 const App: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="navbarcomponent" element={<Navbar />} />
+            <Route path="cadastroUsuario" element={<CadastroUsuario />} />
             <Route element={<RotasPrivadas />}>
               <Route path="/" element={<Home />} />
               <Route path="clientes" element={<Clientes />} />
