@@ -112,7 +112,7 @@ app.get('/apipedido', async (req, res) => {
   try {
     let pool = await sql.createPool(config);
     let pedidos = await pool.query(
-      `SELECT pe.PedidoId, pr.ProdutoNome, cl.ClienteNome, pe.Quantidade, pe.DataEntrega, pe.Status
+      `SELECT pe.PedidoId, pr.ProdutoNome, cl.ClienteNome, pe.Quantidade, pe.DataEntrega, pe.Status, pe.ProdutoId
             FROM UniversalBox.Pedidos pe
             JOIN UniversalBox.Produtos pr ON pr.ProdutoId = pe.ProdutoId
             JOIN UniversalBox.Clientes cl ON cl.ClienteId = pe.ClienteId`);
@@ -123,6 +123,22 @@ app.get('/apipedido', async (req, res) => {
   }
 });
 
+app.put('/apipedidoporid', async (req, res) => {
+  try {
+    console.log('testeeeee' + req)
+    let pool = await sql.createPool(config);
+    let pedidos = await pool.query(
+      `SELECT pe.PedidoId, pr.ProdutoNome, cl.ClienteNome, pe.Quantidade, pe.DataEntrega, pe.Status, pe.PedidoId, pe.ProdutoId, pe.ClienteId
+            FROM UniversalBox.Pedidos pe
+            JOIN UniversalBox.Produtos pr ON pr.ProdutoId = pe.ProdutoId
+            JOIN UniversalBox.Clientes cl ON cl.ClienteId = pe.ClienteId
+            WHERE pe.PedidoId = ${req.body.PedidoId}`);
+    res.send(pedidos[0]);
+  }
+  catch (error) {
+    console.log(error);
+  }
+});
 
 app.post('/criarpedido', async (req, res) => {
   try {
@@ -217,7 +233,6 @@ app.delete('/deletarfornecedor', async (req, res) => {
 //#region Usuarios
 
 app.post('/apiusuario', async (req: Request, res: Response) => {
-  console.log('teste login' + req.body)
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -254,7 +269,6 @@ app.post('/apiusuario', async (req: Request, res: Response) => {
 
 app.post('/criarUsuario', async (req: Request, res: Response) => {
   try {
-    console.log("teste criar" + req.body)
     const { username, email, password } = req.body;
     let pool = await sql.createPool(config);
     let criarUsuario = await pool.query(

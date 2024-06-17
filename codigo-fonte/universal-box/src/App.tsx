@@ -14,6 +14,7 @@ import Pedidos from './pages/Pedidos';
 import CadastroPedido from './pages/CadastroPedido'
 import Fornecedores from './pages/Fornecedores';
 import CadastroUsuario from './pages/CadastroUsuario';
+import EdicaoPedido from './pages/EdicaoPedido';
 
 const App: React.FC = () => {
   return (
@@ -34,6 +35,7 @@ const App: React.FC = () => {
               <Route path="cadastroFornecedor" element={<CadastroFornecedor />} />
               <Route path="pedidos" element={<Pedidos />} />
               <Route path="cadastroPedido" element={<CadastroPedido />} />
+              <Route path="edicaoPedido" element={<EdicaoPedido />} />
             </Route>
           </Routes>
         </BrowserRouter>
