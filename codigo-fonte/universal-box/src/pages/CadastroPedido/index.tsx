@@ -20,7 +20,8 @@ function CadastroPedidos() {
   const [produtoSelecionado, setProdutoSelecionado] = useState<{ ProdutoId: number }>({ ProdutoId: 0 });
   const [clienteSelecionado, setClienteSelecionado] = useState<{ ClienteId: number }>({ ClienteId: 0 });
   const [quantidade, setQuantidade] = useState<number>(0);
-  const [pedidos, setPedidos] = useState<{ ProdutoId: number; ClienteId: number; Quantidade: number }>({ ProdutoId: 0, ClienteId: 0, Quantidade: 0 });
+  const [dataEntrega, setDataEntrega] = useState(new Date());
+  const [pedidos, setPedidos] = useState<{ ProdutoId: number; ClienteId: number; Quantidade: number, DataEntrega: Date }>({ ProdutoId: 0, ClienteId: 0, Quantidade: 0, DataEntrega: new Date() });
   const navigate = useNavigate();  // Uso do useNavigate aqui no topo do componente
 
 
@@ -73,13 +74,19 @@ function CadastroPedidos() {
     setQuantidade(parseInt(value));
   };
 
+  const setData = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setDataEntrega(new Date(value));
+  };
+
   // Disparar uma função após a alteração do select
   const createPedidoState = async () => {
-    if (quantidade > 0 && clienteSelecionado.ClienteId > 0 && produtoSelecionado.ProdutoId > 0) {
+    if (quantidade > 0 && clienteSelecionado.ClienteId > 0 && produtoSelecionado.ProdutoId > 0 && dataEntrega !== null) {
       setPedidos({
         ProdutoId: produtoSelecionado.ProdutoId,
         ClienteId: clienteSelecionado.ClienteId,
         Quantidade: quantidade,
+        DataEntrega: dataEntrega
       });
       console.log(pedidos);
     } else {
@@ -138,6 +145,13 @@ function CadastroPedidos() {
                     name="Quantidade"
                     value={quantidade}
                     onChange={setInput}
+                  />
+                  <input
+                    type="date"
+                    className="form-control mb-3"
+                    placeholder="Data de Entrega"
+                    name="DataEntrega"
+                    onChange={setData}
                   />
                 </div>
                 <button

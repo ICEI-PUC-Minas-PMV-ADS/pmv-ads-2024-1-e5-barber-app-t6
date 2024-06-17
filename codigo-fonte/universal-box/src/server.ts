@@ -112,7 +112,7 @@ app.get('/apipedido', async (req, res) => {
   try {
     let pool = await sql.createPool(config);
     let pedidos = await pool.query(
-      `SELECT pe.PedidoId, pr.ProdutoNome, cl.ClienteNome, pe.Quantidade
+      `SELECT pe.PedidoId, pr.ProdutoNome, cl.ClienteNome, pe.Quantidade, pe.DataEntrega, pe.Status
             FROM UniversalBox.Pedidos pe
             JOIN UniversalBox.Produtos pr ON pr.ProdutoId = pe.ProdutoId
             JOIN UniversalBox.Clientes cl ON cl.ClienteId = pe.ClienteId`);
@@ -129,11 +129,13 @@ app.post('/criarpedido', async (req, res) => {
     let pool = await sql.createPool(config);
     let criarPedidos = await pool.query(
       `INSERT INTO UniversalBox.Pedidos
-                 (ProdutoId, ClienteId, Quantidade)
+                 (ProdutoId, ClienteId, Quantidade, DataEntrega, Status)
                  VALUES
                 ('${req.body.ProdutoId}',
                '${req.body.ClienteId}',
-                '${req.body.Quantidade}');`
+                '${req.body.Quantidade}',
+                '${req.body.DataEntrega}',
+                1);`
     )
     const result = JSON.parse(JSON.stringify(criarPedidos))
     let ajusteQuantidade = await pool.query(

@@ -6,12 +6,22 @@ import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from '../../Navbar';
 import { useOrdenacao } from '../../context/useOrdenacao';
+import generatePDF from '../Relatórios/Relatorios';
+import { format } from "date-fns";
+
+enum Status {
+  Pendente = 1,
+  Cancelado = 2,
+  Entregue = 3
+}
 
 interface Pedido {
   PedidoId: number;
   ProdutoNome: string;
   ClienteNome: string;
   Quantidade: number;
+  DataEntrega: Date;
+  Status: Status
 }
 
 function Pedidos() {
@@ -22,6 +32,8 @@ function Pedidos() {
   const [filtroProduto, setFiltroProduto] = useState('');
   const [filtroCliente, setFiltroCliente] = useState('');
   const [filtroQuantidade, setFiltroQuantidade] = useState('');
+  const [filtroData, setFiltroData] = useState(new Date());
+  const [filtroStatus, setFiltroStatus] = useState('');
 
   useEffect(() => {
     const buscarPedidos = async () => {
@@ -90,6 +102,7 @@ function Pedidos() {
       <div className="container mt-5">
         <h2>Lista de Pedidos</h2>
         <Link to="/cadastroPedido" className="btn btn-primary mb-3">Cadastrar Novo Pedido</Link>
+        <Button onClick={() => generatePDF(pedidos)}>Gerar Relatório</Button>
 
         <div className="row mb-3">
           <div className="col">
@@ -118,6 +131,12 @@ function Pedidos() {
               <th scope="col" onClick={() => solicitarOrdenacao('Quantidade')} className={obterClassNamesPara('Quantidade')}>
                 Quantidade {renderIconeOrdenacao('Quantidade')}
               </th>
+              <th scope="col" onClick={() => solicitarOrdenacao('DataEntrega')} className={obterClassNamesPara('DataEntrega')}>
+                Data de Entrega {renderIconeOrdenacao('DataEntrega')}
+              </th>
+              <th scope="col" onClick={() => solicitarOrdenacao('Status')} className={obterClassNamesPara('Status')}>
+                Status {renderIconeOrdenacao('Status')}
+              </th>
               <th scope="col">Ações</th>
             </tr>
           </thead>
@@ -128,6 +147,8 @@ function Pedidos() {
                 <td>{pedido.ProdutoNome}</td>
                 <td>{pedido.ClienteNome}</td>
                 <td>{pedido.Quantidade}</td>
+                <td>{pedido.DataEntrega !== undefined && pedido.DataEntrega !== null ? format(new Date(pedido.DataEntrega), "dd/MM/yyyy") : ''}</td>
+                <td>{Status[pedido.Status]}</td>
                 <td><Button onClick={() => deletarPedidoEstado(pedido.PedidoId)}>Deletar</Button></td>
               </tr>
             ))}

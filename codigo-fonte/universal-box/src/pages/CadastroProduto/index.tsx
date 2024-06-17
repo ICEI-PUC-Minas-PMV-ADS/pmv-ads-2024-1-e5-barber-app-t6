@@ -95,7 +95,7 @@ function CadastroProduto() {
                   <input
                     type="number"
                     className="form-control mb-3"
-                    placeholder="Preço"
+                    placeholder="Preco"
                     name="ProdutoPreco"
                     value={produto.ProdutoPreco}
                     onChange={setInput} />
