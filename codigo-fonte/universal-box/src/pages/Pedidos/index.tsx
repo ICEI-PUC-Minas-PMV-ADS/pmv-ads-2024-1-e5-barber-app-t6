@@ -16,16 +16,19 @@ interface Pedido {
   ClienteNome: string;
   Quantidade: number;
   DataEntrega: Date;
-  Status: Status
+  Status: Status;
+  ProdutoId: number;
 }
 
 const assignColorToStatus = (pedido: number) => {
-  if (pedido === 3) {
-    return "p-3 mb-2 bg-success text-white";
-  } else if (pedido === 1) {
+  if (pedido === 1) {
     return "p-3 mb-2 bg-warning text-dark";
   } else if (pedido === 2) {
-    return "p-3 mb-2 bg-light text-dark";
+    return "p-3 mb-2 bg-dark text-white";
+  } else if (pedido === 3) {
+    return "p-3 mb-2 bg-success text-white";
+  } else if (pedido === 4) {
+    return "p-3 mb-2 bg-danger text-white"
   }
 };
 
@@ -37,8 +40,6 @@ function Pedidos() {
   const [filtroProduto, setFiltroProduto] = useState('');
   const [filtroCliente, setFiltroCliente] = useState('');
   const [filtroQuantidade, setFiltroQuantidade] = useState('');
-  const [filtroData, setFiltroData] = useState(new Date());
-  const [filtroStatus, setFiltroStatus] = useState('');
 
   useEffect(() => {
     const buscarPedidos = async () => {
@@ -159,6 +160,7 @@ function Pedidos() {
 
                 </td>
                 <td><Button onClick={() => deletarPedidoEstado(pedido.PedidoId)}>Deletar</Button></td>
+                <td><Link to={'/edicaoPedido'} state={pedido}> Editar</Link ></td>
               </tr>
             ))}
           </tbody>
