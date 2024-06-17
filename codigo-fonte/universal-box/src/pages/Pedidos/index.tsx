@@ -8,12 +8,7 @@ import Navbar from '../../Navbar';
 import { useOrdenacao } from '../../context/useOrdenacao';
 import generatePDF from '../Relatórios/Relatorios';
 import { format } from "date-fns";
-
-enum Status {
-  Pendente = 1,
-  Cancelado = 2,
-  Entregue = 3
-}
+import Status from '../../enums/Status';
 
 interface Pedido {
   PedidoId: number;
@@ -23,6 +18,16 @@ interface Pedido {
   DataEntrega: Date;
   Status: Status
 }
+
+const assignColorToStatus = (pedido: number) => {
+  if (pedido === 3) {
+    return "p-3 mb-2 bg-success text-white";
+  } else if (pedido === 1) {
+    return "p-3 mb-2 bg-warning text-dark";
+  } else if (pedido === 2) {
+    return "p-3 mb-2 bg-light text-dark";
+  }
+};
 
 function Pedidos() {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
@@ -71,6 +76,7 @@ function Pedidos() {
   useEffect(() => {
     if (deletarPedido.PedidoId !== null) {
       deletarPedidoAPI();
+      window.location.reload();
     }
   }, [deletarPedido]);
 
@@ -102,7 +108,7 @@ function Pedidos() {
       <div className="container mt-5">
         <h2>Lista de Pedidos</h2>
         <Link to="/cadastroPedido" className="btn btn-primary mb-3">Cadastrar Novo Pedido</Link>
-        <Button onClick={() => generatePDF(pedidos)}>Gerar Relatório</Button>
+        <Button className="btn btn-primary mb-3" onClick={() => generatePDF(pedidos.filter(pedido => pedido.DataEntrega > new Date()))}>Gerar Relatório</Button>
 
         <div className="row mb-3">
           <div className="col">
@@ -148,7 +154,10 @@ function Pedidos() {
                 <td>{pedido.ClienteNome}</td>
                 <td>{pedido.Quantidade}</td>
                 <td>{pedido.DataEntrega !== undefined && pedido.DataEntrega !== null ? format(new Date(pedido.DataEntrega), "dd/MM/yyyy") : ''}</td>
-                <td>{Status[pedido.Status]}</td>
+                <td className={assignColorToStatus(pedido.Status)}>
+                  {Status[pedido.Status]}
+
+                </td>
                 <td><Button onClick={() => deletarPedidoEstado(pedido.PedidoId)}>Deletar</Button></td>
               </tr>
             ))}
