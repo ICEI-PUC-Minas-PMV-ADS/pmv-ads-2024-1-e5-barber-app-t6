@@ -76,7 +76,6 @@ O projeto está restrito pelos itens apresentados na tabela a seguir.
 | R8 - Restrições de Acesso e Permissões            | Restrições sobre quem pode acessar e modificar os dados no sistema.                                |
 
 
-Enumere as restrições à sua solução. Lembre-se de que as restrições geralmente limitam a solução candidata.
 
 
 ## Diagrama de Casos de Uso
