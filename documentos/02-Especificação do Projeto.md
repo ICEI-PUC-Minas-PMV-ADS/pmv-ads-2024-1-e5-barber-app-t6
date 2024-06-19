@@ -87,7 +87,8 @@ O projeto está restrito pelos itens apresentados na tabela a seguir.
 
 ## Modelo ER (Projeto Conceitual)
 
-![MODELO ER UNIVERSAL BOX](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2024-1-e5-universalbox-app-t6/assets/91230711/3954484d-8b80-4114-96d6-81b446005d44)
+
+![Diagrama ER de banco de dados (Universal Box) (1)](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2024-1-e5-universalbox-app-t6/assets/91230711/7a4b1482-128a-4b42-9b8a-ae3617ccc529)
 
 
 
