@@ -94,6 +94,6 @@ O projeto está restrito pelos itens apresentados na tabela a seguir.
 
 ## Projeto da Base de Dados
 
+![BANCO DE DADOS UNIVERSAL BOX](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2024-1-e5-universalbox-app-t6/assets/91230711/c2257408-fdb5-4427-9346-52275b37ea5d)
 
-![PROJETO DE BASE DE DADOS ](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2024-1-e5-universalbox-app-t6/assets/91230711/e9df73fc-4152-4fb1-8219-095343ea80bf)
 
