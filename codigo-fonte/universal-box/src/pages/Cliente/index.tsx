@@ -4,7 +4,7 @@ import Navbar from '../../Navbar';
 import { AuthContext } from '../../context/AuthContext';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { faSortUp, faSortDown, faTrash } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useOrdenacao } from '../../context/useOrdenacao';
 
@@ -144,7 +144,11 @@ function Clientes() {
                 <td>{cliente.ClienteCpf}</td>
                 <td>{cliente.ClienteTelefone}</td>
                 <td>{cliente.ClienteCep}</td>
-                <td><Button onClick={() => DeleteClienteState(cliente.ClienteId)}>Deletar</Button></td>
+                <td>
+                  <button className="btn btn-outline-secondary btn-sm quantidade-btn delete-btn" onClick={() => DeleteClienteState(cliente.ClienteId)}>
+                    <FontAwesomeIcon icon={faTrash} className="trash-icon" />
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

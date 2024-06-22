@@ -2,7 +2,7 @@ import React, { useState, useEffect, ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { faSortUp, faSortDown, faTrash  } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from '../../Navbar';
 import { useOrdenacao } from '../../context/useOrdenacao';
@@ -159,7 +159,11 @@ function Pedidos() {
                   {Status[pedido.Status]}
 
                 </td>
-                <td><Button onClick={() => deletarPedidoEstado(pedido.PedidoId)}>Deletar</Button></td>
+                <td>
+                  <button className="btn btn-outline-secondary btn-sm quantidade-btn delete-btn" onClick={() => deletarPedidoEstado(pedido.PedidoId)}>
+                    <FontAwesomeIcon icon={faTrash} className="trash-icon" />
+                  </button>
+                </td>
                 <td><Link to={'/edicaoPedido'} state={pedido}> Editar</Link ></td>
               </tr>
             ))}
