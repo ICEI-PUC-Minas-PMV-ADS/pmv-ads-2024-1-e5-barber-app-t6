@@ -60,6 +60,26 @@ app.delete('/deletar', async (req: Request, res: Response) => {
   }
 });
 
+app.put('/atualizarQuantidade', async (req: Request, res: Response) => {
+  try {
+    const { ProdutoId, Quantidade } = req.body;
+    let pool = await sql.createPool(config);
+
+    // Atualizar a quantidade do produto no banco de dados
+    await pool.query(
+      'UPDATE UniversalBox.Produtos SET ProdutoQuantidade = ? WHERE ProdutoId = ?',
+      [Quantidade, ProdutoId]
+    );
+
+    console.log(`Quantidade do produto com ID ${ProdutoId} atualizada para ${Quantidade}`);
+
+    res.send({ message: 'Quantidade atualizada com sucesso' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+});
+
 //#endregion
 
 //#region Clientes

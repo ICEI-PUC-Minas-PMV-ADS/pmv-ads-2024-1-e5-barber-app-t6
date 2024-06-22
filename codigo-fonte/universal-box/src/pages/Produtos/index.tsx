@@ -92,6 +92,30 @@ function Produtos() {
     return <FontAwesomeIcon icon={faSortDown} className="sort-icon" />;
   };
 
+  const atualizarQuantidade = async (produtoId: string, novaQuantidade: number) => {
+    try {
+      const response = await fetch('/atualizarQuantidade', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ ProdutoId: produtoId, Quantidade: novaQuantidade })
+      });
+  
+      if (!response.ok) {
+        throw new Error('Erro ao atualizar a quantidade');
+      }
+  
+      // Atualizar o estado local dos produtos
+      setProdutos(produtos.map(produto =>
+        produto.ProdutoId === produtoId ? { ...produto, ProdutoQuantidade: novaQuantidade } : produto
+      ));
+    } catch (error) {
+      console.error('Erro ao atualizar a quantidade:', error);
+    }
+  };
+
   return (
     <div>
       <Navbar />
@@ -149,10 +173,6 @@ function Produtos() {
                 <td>{produto.FornecedorNome}</td>
                 <td>{produto.ProdutoModelo}</td>
                 <td>{produto.ProdutoPreco}</td>
-<<<<<<< Updated upstream
-                <td>{produto.ProdutoQuantidade}</td>
-                <td><Button onClick={() => deletarProdutoEstado(produto.ProdutoId)}>Deletar</Button></td>
-=======
                 <td>
                   <button className="btn btn-outline-secondary quantidade-btn" onClick={() => atualizarQuantidade(produto.ProdutoId, produto.ProdutoQuantidade - 1)}>-</button>
                   {produto.ProdutoQuantidade}
@@ -163,7 +183,7 @@ function Produtos() {
                     <FontAwesomeIcon icon={faTrash} className="trash-icon" />
                   </button>
                 </td>
->>>>>>> Stashed changes
+                <td><Button onClick={() => deletarProdutoEstado(produto.ProdutoId)}>Deletar</Button></td>
               </tr>
             ))}
           </tbody>

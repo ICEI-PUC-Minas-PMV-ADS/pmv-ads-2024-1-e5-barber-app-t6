@@ -36,14 +36,13 @@ code {
 /* Adicione este bloco de código CSS no arquivo CSS correspondente */
 .sort-icon {
     visibility: hidden;
-  }
+}
   
-  th:hover .sort-icon {
-    visibility: visible;
-<<<<<<< Updated upstream
-  }
-=======
-  }
+th:hover .sort-icon {
+  visibility: visible;
+
+}
+
 
 .quantidade-btn {
     margin: 0 12px; /* Ajuste o valor conforme necessário */
@@ -60,4 +59,4 @@ code {
     background-color: transparent;
     padding: 0.25rem; /* Opcional: ajuste o padding para um melhor visual */
 }
->>>>>>> Stashed changes
+
