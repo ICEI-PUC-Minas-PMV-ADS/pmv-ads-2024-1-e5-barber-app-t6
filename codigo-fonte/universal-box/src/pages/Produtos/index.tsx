@@ -183,7 +183,6 @@ function Produtos() {
                     <FontAwesomeIcon icon={faTrash} className="trash-icon" />
                   </button>
                 </td>
-                <td><Button onClick={() => deletarProdutoEstado(produto.ProdutoId)}>Deletar</Button></td>
               </tr>
             ))}
           </tbody>
