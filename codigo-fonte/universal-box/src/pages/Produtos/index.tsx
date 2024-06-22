@@ -2,7 +2,7 @@ import React, { useState, useEffect, ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { faSortUp, faSortDown, faTrash } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from '../../Navbar';
 import { useOrdenacao } from '../../context/useOrdenacao';
@@ -149,8 +149,21 @@ function Produtos() {
                 <td>{produto.FornecedorNome}</td>
                 <td>{produto.ProdutoModelo}</td>
                 <td>{produto.ProdutoPreco}</td>
+<<<<<<< Updated upstream
                 <td>{produto.ProdutoQuantidade}</td>
                 <td><Button onClick={() => deletarProdutoEstado(produto.ProdutoId)}>Deletar</Button></td>
+=======
+                <td>
+                  <button className="btn btn-outline-secondary quantidade-btn" onClick={() => atualizarQuantidade(produto.ProdutoId, produto.ProdutoQuantidade - 1)}>-</button>
+                  {produto.ProdutoQuantidade}
+                  <button className="btn btn-outline-secondary quantidade-btn" onClick={() => atualizarQuantidade(produto.ProdutoId, produto.ProdutoQuantidade + 1)}>+</button>
+                </td>
+                <td>
+                  <button className="btn btn-outline-secondary btn-sm quantidade-btn delete-btn" onClick={() => deletarProdutoEstado(produto.ProdutoId)}>
+                    <FontAwesomeIcon icon={faTrash} className="trash-icon" />
+                  </button>
+                </td>
+>>>>>>> Stashed changes
               </tr>
             ))}
           </tbody>
