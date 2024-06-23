@@ -108,7 +108,7 @@ function Pedidos() {
       <Navbar />
       <div className="container mt-5">
         <h2>Lista de Pedidos</h2>
-        <Link to="/cadastroPedido" className="btn btn-primary mb-3">Cadastrar Novo Pedido</Link>
+        <Link to="/cadastroPedido" className="btn btn-primary mb-3 mr-3">Cadastrar Novo Pedido</Link>
         <Button className="btn btn-primary mb-3" onClick={() => generatePDF(pedidos)}>Gerar Relatório</Button>
 
         <div className="row mb-3">
