@@ -81,7 +81,8 @@ O projeto está restrito pelos itens apresentados na tabela a seguir.
 ## Diagrama de Casos de Uso
 
 
-![diagrama](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2024-1-e5-universalbox-app-t6/assets/140434422/fd3f75d1-cfb7-4c7f-8ed5-51fedf1129b6)
+
+![Diagrama2](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2024-1-e5-universalbox-app-t6/assets/140434422/09904e4d-f770-49ee-9cb1-397d9d8162a3)
 
 
 
