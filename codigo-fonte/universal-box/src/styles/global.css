@@ -60,3 +60,13 @@ th:hover .sort-icon {
     padding: 0.25rem; /* Opcional: ajuste o padding para um melhor visual */
 }
 
+.edit-btn {
+    background-color: transparent;
+    color: gray; /* Cor do texto branco */
+    border-color: transparent; /* Cor da borda igual à cor de fundo */
+  }
+  
+  .edit-btn:hover {
+    background-color: #23272b; /* Cor de fundo mais escura ao passar o mouse */
+    border-color: #23272b; /* Cor da borda ao passar o mouse */
+  }
