@@ -1,5 +1,6 @@
 # Implantação do Software
 
+
 •	Apresentar o planejamento da implantação: descrever tecnologias e processo de implantação.
 [![Navegação](https://img.youtube.com/vi/00eRDLuH9Pw/maxresdefault.jpg)](https://www.youtube.com/watch?v=00eRDLuH9Pw)
 
