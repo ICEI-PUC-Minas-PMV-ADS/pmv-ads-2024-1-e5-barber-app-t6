@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AuthContext } from '../../context/AuthContext';
+import logo from '../../img/LOGO DOURADA COMPLETA.png';
 
 const Login: React.FC = () => {
   const { login } = useContext(AuthContext);

@@ -70,3 +70,10 @@ th:hover .sort-icon {
     background-color: #23272b; /* Cor de fundo mais escura ao passar o mouse */
     border-color: #23272b; /* Cor da borda ao passar o mouse */
   }
+
+  .logo {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto; /* Centraliza a logo */
+    display: block; /* Faz com que a logo seja um bloco */
+  }
