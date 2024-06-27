@@ -1,0 +1,26 @@
+message: Please cite this software using these metadata.
+title: Sistema de Gestao de Estoque - Universal Box
+authors:
+  - family-names: Marcela Mercier de Oliveira
+    given-names: Mariana 
+  - family-names: Miranda Cangussu
+    given-names: Gabriel
+  - family-names: Alexandre da Silva Santos
+    given-names: Lucas
+  - family-names: Vitor Pereira Rocha
+    given-names: Paulo
+  - family-names: Diandra Ferreira
+    given-names: Thassia
+  - name-suffix: Professor
+    affiliation: PUC Minas
+    family-names: Christina de Paiva Carvalho
+    given-names: Joyce
+ 
+keywords:
+  - Gestão
+  - Estoque
+  - Vidro
+  - Esquadrias
+repository-code: https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2024-1-e5-universalbox-app-t6
+version: 1.0.0
+date-released: 2024-06-27
